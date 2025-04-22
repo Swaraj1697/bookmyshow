@@ -1,14 +1,31 @@
 import React from 'react'
 import { Button, Form, Input } from 'antd'
 import { Link } from 'react-router-dom'
+import { RegisterUser } from '../../api/users'
 
 function Login() {
+
+    const onFinish = async (values) => {
+        console.log('Success:', values);
+        const response = await RegisterUser(values);
+        try {
+            if (response.success) {
+                console.log(response.message);
+
+            } else {
+                console.log(response.message);
+            }
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
     return (
         <>
             <main className="App-header">
                 <h1>Login to BookMyShow</h1>
                 <section className="mw-500 text-center px-3"></section>
-                <Form layout="vertical">
+                <Form layout="vertical" onFinish={onFinish}>
                     <Form.Item label="Email" htmlFor="email" name="email" className='d-block' rules={[{ required: true, message: 'Please input your email!' }, { type: "email", message: "Please enter a valid email" }]}>
                         <Input id="email" type="text" placeholder="Enter your email" />
                     </Form.Item>
