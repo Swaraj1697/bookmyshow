@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Form, Input } from 'antd'
+import { Button, Form, Input, message } from 'antd'
 import { Link } from 'react-router-dom'
 import { RegisterUser } from '../../api/users'
 
@@ -10,9 +10,11 @@ function Register() {
         const response = await RegisterUser(values);
         try {
             if (response.success) {
+                message.success(response.message);
                 console.log("success", response);
 
             } else {
+                message.error(response.message);
                 alert(response.message);
             }
         }

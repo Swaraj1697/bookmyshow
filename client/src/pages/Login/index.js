@@ -1,18 +1,22 @@
 import React from 'react'
-import { Button, Form, Input } from 'antd'
-import { Link } from 'react-router-dom'
-import { RegisterUser } from '../../api/users'
+import { Button, Form, Input, message } from 'antd'
+import { Link, useNavigate } from 'react-router-dom'
+import { LoginUser } from '../../api/users'
 
 function Login() {
-
+    const navigate = useNavigate();
     const onFinish = async (values) => {
         console.log('Success:', values);
-        const response = await RegisterUser(values);
+        const response = await LoginUser(values);
         try {
             if (response.success) {
+                message.success(response.message);
                 console.log(response.message);
+                localStorage.setItem("token", response.data); // Store the token in local storage
+                navigate("/"); // Redirect to home page after successful login
 
             } else {
+                message.error(response.message);
                 console.log(response.message);
             }
         }
