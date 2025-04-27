@@ -2,8 +2,8 @@ const express = require('express');
 const UserModel = require('../models/userModels');
 const jwt = require('jsonwebtoken'); // Importing the jsonwebtoken library for token generation and verification
 const cookieParser = require('cookie-parser'); // Importing the cookie-parser middleware for parsing cookies
-
 const usersRouter = express.Router(); // Create a new router object
+const authMiddleware = require('../middlewares/authMiddleware'); // Importing the authentication middleware
 
 usersRouter.post('/register', async (req, res) => {
     try {
@@ -50,6 +50,7 @@ usersRouter.post('/login', async (req, res) => {
         //     httpOnly: true, // Cannot be accessed by JavaScript on the client side
         //     maxAge: 24 * 60 * 60 * 1000, // Set the cookie to expire in 1 day
         // }); // Set the token as a cookie in the response
+        console.log("JWT Secret at login:", process.env.JWT_SECRET);
         res.send({
             success: true,
             message: 'User logged in successfully',
@@ -60,6 +61,19 @@ usersRouter.post('/login', async (req, res) => {
     catch (err) {
         res.status(400).json({ message: err.message });
     }
-})
+});
+
+usersRouter.get('/currentUser', authMiddleware, async (req, res) => {
+
+    console.log(req.url, req.method); // Log the request headers for debugging
+    const user = await UserModel.findById(req.userId).select("-password"); // Find the user by ID from the request body // Log the user data for debugging
+
+    res.send({
+        success: true,
+        message: "User fetched successfully",
+        data: user,
+    });
+
+}); // Route for getting the current user
 
 module.exports = usersRouter; // Export the router for use in other files

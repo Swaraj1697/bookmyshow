@@ -13,6 +13,7 @@ function Login() {
                 message.success(response.message);
                 console.log(response.message);
                 localStorage.setItem("token", response.data); // Store the token in local storage
+                console.log("Signing JWT with secret:", process.env.JWT_SECRET);
                 navigate("/"); // Redirect to home page after successful login
 
             } else {
