@@ -15,7 +15,7 @@ import { useState } from 'react'
 function MovieList() {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    // const [movies, setMovies] = useState(fakeMovies);
+    const [movies, setMovies] = useState([]);
     const [selectedMovie, setSelectedMovie] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [formType, setFormType] = useState("add");
@@ -35,33 +35,33 @@ function MovieList() {
     }
 
     useEffect(() => {
-        // getData();
+        getData();
     }, [])
 
-    const fakeMovies = [
-        {
-            key: "1",
-            poster: "https://via.placeholder.com/75x115",
-            name: "Sabarmati Report",
-            description: "Real Story of Sabarmati incident",
-            duration: "2h 30m",
-            genre: "Thriller",
-            language: "Hindi",
-            releaseDate: "12-11-2024",
-        },
-        {
-            key: "2",
-            poster: "https://via.placeholder.com/75x115",
-            name: "Amaran",
-            description: "Soldier Story",
-            duration: "2h 30m",
-            genre: "Action",
-            language: "Hindi",
-            releaseDate: "12-11-2024",
-        },
-    ]
+    // const fakeMovies = [
+    //     {
+    //         key: "1",
+    //         poster: "https://via.placeholder.com/75x115",
+    //         name: "Sabarmati Report",
+    //         description: "Real Story of Sabarmati incident",
+    //         duration: "2h 30m",
+    //         genre: "Thriller",
+    //         language: "Hindi",
+    //         releaseDate: "12-11-2024",
+    //     },
+    //     {
+    //         key: "2",
+    //         poster: "https://via.placeholder.com/75x115",
+    //         name: "Amaran",
+    //         description: "Soldier Story",
+    //         duration: "2h 30m",
+    //         genre: "Action",
+    //         language: "Hindi",
+    //         releaseDate: "12-11-2024",
+    //     },
+    // ]
 
-    const [movies, setMovies] = useState(fakeMovies);
+    // const [movies, setMovies] = useState(fakeMovies);
 
     const tableHeadings = [
         {

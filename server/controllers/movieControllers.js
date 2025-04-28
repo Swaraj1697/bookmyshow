@@ -13,6 +13,8 @@ const addMovie = async (req, res) => {
 const getAllMovies = async (req, res) => {
     try {
         const movies = await Movie.find();
+        console.log('movies', movies);
+
         res.send({ success: true, data: movies });
     } catch (error) {
         res.send({ success: false, message: error.message });
