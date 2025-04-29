@@ -6,6 +6,7 @@ import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { getAllTheatres } from "../../api/theatres";
 import { useSelector, useDispatch } from "react-redux";
 import { ShowLoading, HideLoading } from "../../redux/loaderSlice";
+import ShowModal from "./ShowModal";
 
 
 const TheatreList = () => {
