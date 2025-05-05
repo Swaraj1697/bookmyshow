@@ -1,11 +1,13 @@
 import React from 'react'
+import Bookings from './Bookings'
 
-function User() {
+function Profile() {
     return (
         <div>
-            User
+            <h1 className="text-center">My Bookings</h1>
+            <Bookings />
         </div>
     )
 }
 
-export default User
+export default Profile

@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken'); // Importing the jsonwebtoken library for t
 const cookieParser = require('cookie-parser'); // Importing the cookie-parser middleware for parsing cookies
 const usersRouter = express.Router(); // Create a new router object
 const authMiddleware = require('../middlewares/authMiddleware'); // Importing the authentication middleware
+const EmailHelper = require("../utils/emailHelper"); // Importing the email helper for sending emails
 
 usersRouter.post('/register', async (req, res) => {
     try {
@@ -28,6 +29,10 @@ usersRouter.post('/register', async (req, res) => {
         res.status(400).json({ message: err.message });
     }
 }); // Route for user registration
+
+const otpGenerator = () => {
+    return Math.floor(100000 + Math.random() * 900000); // Generate a random 6-digit OTP
+}; // Importing the otp-generator library for generating OTPs
 
 usersRouter.post('/login', async (req, res) => {
     try {
@@ -75,5 +80,78 @@ usersRouter.get('/currentUser', authMiddleware, async (req, res) => {
     });
 
 }); // Route for getting the current user
+
+usersRouter.patch("/forgetPassword", async (req, res) => {
+    try {
+        if (req.body.email === undefined) {
+            return res.send({
+                success: false,
+                message: "Email is required"
+            });
+        }
+        const user = await UserModel.findOne({ email: req.body.email });
+        if (user === null) {
+            return res.send({
+                success: false,
+                message: "User not found"
+            });
+        }
+        const otp = otpGenerator(); // Generate a random OTP
+        user.otp = otp; // Set the OTP in the user object
+        user.otpExpiry = Date.now() + 15 * 60 * 1000; // Set the OTP expiry time to 15 minutes from now
+        await user.save(); // Save the updated user object to the database
+        await EmailHelper("otp.html", user.email, { name: user.name, otp }); // Send the OTP email to the user
+        res.send({
+            success: true,
+            message: "OTP sent to your email",
+        });
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+
+})
+
+usersRouter.patch("/resetpassword/:email", async (req, res) => {
+    // -> otp
+    // newPassword and confirmNewPassword
+    // email - req.params.email
+
+    try {
+        let resetDetails = req.body;
+        // required fields are present or not
+        if (!resetDetails.password || !resetDetails.otp) {
+            return res.send({
+                success: false,
+                message: "Please enter all the required fields",
+            });
+        }
+        // search for user
+        const user = await UserModel.findOne({ email: req.params.email }); // {name:"Aditya",otp:123456,role:"user"}
+        // if user is not present
+        if (user === null) {
+            return res.send({
+                success: false,
+                message: "User not found",
+            });
+        }
+        // if otp is not matching or otp is expired
+        if (user.otp !== resetDetails.otp || user.otpExpiry < Date.now()) {
+            return res.send({
+                success: false,
+                message: "Invalid OTP or OTP expired",
+            });
+        }
+        user.password = resetDetails.password;
+        user.otp = undefined;
+        user.otpExpiry = undefined;
+        await user.save();
+        res.status(200).send({
+            success: true,
+            message: "Password reset successfully",
+        });
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+});
 
 module.exports = usersRouter; // Export the router for use in other files

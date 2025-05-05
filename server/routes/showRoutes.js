@@ -26,11 +26,17 @@ router.delete('/delete-show/:showId', async (req, res) => {
 
 router.put('/update-show', async (req, res) => {
     try {
-        const showId = req.body._id;
-        if (!showId) {
+        const showId = req.body.showId;
+        console.log(showId);
+
+        const showIdPresent = await Show.findById(showId)
+        console.log(showIdPresent);
+
+
+        if (showIdPresent === null) {
             return res.status(400).json({ message: 'Show not found' });
         }
-        await Show.findByIdAndUpdate(req.body._id, req.body, { new: true });
+        await Show.findByIdAndUpdate(req.body.showId, req.body, { new: true });
         res.send({ success: true, message: 'Show updated successfully' });
     } catch (err) {
         return res.status(500).json({ message: err.message });

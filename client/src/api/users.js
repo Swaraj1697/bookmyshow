@@ -27,3 +27,22 @@ export const GetCurrentUser = async () => {
         return error.response.data;
     }
 }
+
+export const ForgetPassword = async (userData) => {
+    try {
+        const response = await axiosInstance.patch("/api/users/forgetpassword", userData);
+        return response.data;
+    } catch (error) {
+        return error.response.data;
+    }
+}
+
+export const ResetPassword = async (userData, id) => {
+    try {
+        const response = await axiosInstance.patch(`/api/users/resetpassword/${id}`, userData);
+        return response.data;
+    } catch (error) {
+        return error.response.data;
+    }
+}
+
