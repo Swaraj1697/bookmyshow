@@ -1,6 +1,16 @@
+const path = require('path');
 const express = require('express');
+const cors = require('cors'); // import cors for cross-origin resource sharing
 const app = express();
-
+app.use(cors(
+    {
+        origin: "*", // allow requests from this origin
+        methods: ["GET", "POST", "PUT", "DELETE"], // allow these HTTP methods
+        allowedHeaders: ["Content-Type", "Authorization"], // allow these headers in requests
+    }
+)); // use cors middleware to allow cross-origin requests
+const clientBuildPath = path.join(__dirname, '../client/build'); // path to the client build folder
+app.use(express.static(clientBuildPath)); // serve static files from the client build folder
 require('dotenv').config(); // loading environment variables from .env file
 
 const connectDB = require('./config/db'); // database connection
